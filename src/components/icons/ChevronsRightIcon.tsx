@@ -1,15 +1,18 @@
 type ChevronsRightIconProps = {
   size?: 20 | 16;
+  className?: string;
 };
 
 export default function ChevronsRightIcon({
   size = 20,
+  className = "",
 }: ChevronsRightIconProps) {
   const strokeWidth =
     size === 16 ? "var(--icon-stroke-small)" : "var(--icon-stroke-default)";
 
   return (
     <svg
+      className={className}
       width={size}
       height={size}
       viewBox="0 0 20 20"

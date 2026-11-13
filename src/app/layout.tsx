@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${inter.variable}`}>
-      <body>{children}</body>
+      <body className="bg-bg-main text-black antialiased">{children}</body>
     </html>
   );
 }

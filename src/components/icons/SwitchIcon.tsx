@@ -1,6 +1,11 @@
-export default function SwitchIcon02() {
+interface SwitchIconProps {
+  className?: string;
+}
+
+export default function SwitchIcon02({ className = "" }: SwitchIconProps) {
   return (
     <svg
+      className={className}
       width="34"
       height="20"
       viewBox="0 0 34 20"
@@ -13,7 +18,10 @@ export default function SwitchIcon02() {
         width="33"
         height="19"
         rx="9.5"
-        style={{ strokeWidth: "var(--icon-stroke-default)" }}
+        fill="currentColor"
+        fillOpacity="0"
+        className="transition-[fill-opacity] duration-200 group-hover:[fill-opacity:0.12]"
+        style={{ strokeWidth: 1 }}
         stroke="currentColor"
       />
       <path

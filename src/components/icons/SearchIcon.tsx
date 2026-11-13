@@ -1,6 +1,11 @@
-export default function SearchIcon() {
+interface SearchIconProps {
+  className?: string;
+}
+
+export default function SearchIcon({ className = "" }: SearchIconProps) {
   return (
     <svg
+      className={className}
       width="20"
       height="20"
       viewBox="0 0 20 20"

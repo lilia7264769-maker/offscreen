@@ -2,10 +2,11 @@
 
 @theme {
   --color-brand-blue: #044eb7;
-  --color-brand-blue-hover: alpha(var(--color-brand-blue) / 85%);
+  --color-brand-blue-hover: rgb(4 78 183 / 85%);
 
   --color-white: #fefefe;
   --color-white-low16: rgba(254, 254, 254, 0.16);
+  --color-white-low20: rgba(254, 254, 254, 0.2);
   --color-white-low24: rgba(254, 254, 254, 0.24);
 
   --color-black: #1e252f;
@@ -24,6 +25,14 @@
 
   --icon-stroke-default: 1.8;
   --icon-stroke-small: 1.4;
+
+  --radius-card: 12px;
+  --radius-badge: 6px;
+  --radius-btn: 9999px;
+
+  --shadow-genre-card: 1px 3px 9.3px rgba(0, 0, 0, 0.06);
+
+  --header2: 28px;
 }
 
 @layer base {
@@ -42,12 +51,52 @@
   }
 
   h2 {
-    font-size: 2.25rem; /* 36px */
+    font-size: 2rem; /* 32px */
     font-weight: 800;
   }
 
   h3 {
     font-size: 1.5rem; /* 24px */
     font-weight: 700;
+  }
+
+  button {
+    cursor: pointer;
+  }
+  .header2 {
+    font-size: 1.75rem;
+    font-weight: 800;
+  }
+}
+
+/* В Tailwind v4 кастомные утилиты пишутся как обычный CSS в конце файла */
+.container-grid {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  /* Адаптивные марджины: 16px на мобилках, 40px на планшетах, 80px на десктопе */
+  padding-inline: 1rem;
+  @media (min-width: 768px) {
+    padding-inline: 2.5rem;
+  }
+  @media (min-width: 1280px) {
+    padding-inline: 5rem; /* Это ровно 80px с каждой стороны по вашей Фигме! */
+  }
+}
+
+/* Отключаем стандартный скроллбар для аккуратных лент */
+.scrollbar-none {
+  -ms-overflow-style: none; /* IE и Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari и Opera */
+  }
+}
+
+.hero-indicator {
+  height: 2.5px;
+
+  @media (min-width: 768px) {
+    height: 3px;
   }
 }

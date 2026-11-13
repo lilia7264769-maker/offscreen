@@ -2,23 +2,41 @@ interface BadgeProps {
   children: React.ReactNode;
   // Теперь у нас три варианта внешнего вида
   variant?: "dark" | "gradient" | "light";
+  compactMobile?: boolean;
 }
 
-export default function Badge({ children, variant = "light" }: BadgeProps) {
-  const baseStyles =
-    "inline-flex items-center justify-center px-4 py-1.5 text-xs font-semibold rounded-full transition-colors";
+export default function Badge({
+  children,
+  variant = "light",
+  compactMobile = false,
+}: BadgeProps) {
+  const baseStyles = compactMobile
+    ? "inline-flex items-center justify-center gap-1.5 rounded-full px-2.5 py-1.5 text-[14px] md:gap-1.5 md:px-4 md:py-1.5 md:text-[15px] "
+    : "inline-flex items-center justify-center gap-1.5 rounded-full px-4 py-1.5 text-[15px] ";
 
   const variants = {
-    dark: "bg-black-low border border-white-low24 text-white backdrop-blur-sm [border-width:var(--stroke-width-thin)]",
-
+    //это обьект и мы там выбираем какой вариант
     gradient:
-      "bg-gradient-to-r from-pink-500 to-orange-500 text-white border-none",
+      "border-none text-[var(--color-white)] font-bold lowercase transition-transform hover:scale-105",
+
+    dark: "border-none bg-[var(--color-white-low16)] font-normal lowercase text-[var(--color-white)] transition-transform hover:scale-105",
 
     light:
-      "bg-bg-grey border border-border-grey text-black [border-width:var(--stroke-width-thin)]",
+      "border border-[var(--color-brand-blue)] border-width-[var(--stroke-width-thin)] text-[15px] text-[var([var(--color-brand-blue)]]",
   };
 
   return (
-    <span className={`${baseStyles} ${variants[variant]}`}>{children}</span>
+    <span
+      className={`${baseStyles} ${variants[variant]}`}
+      style={
+        variant === "gradient"
+          ? {
+              backgroundImage: "linear-gradient(to right, #D417C1, #B75804)",
+            }
+          : undefined
+      }
+    >
+      {children}
+    </span>
   );
 }
