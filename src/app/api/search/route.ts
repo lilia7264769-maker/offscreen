@@ -13,7 +13,7 @@ export async function GET(request: Request) {
 
   try {
     const movies = query ? await searchMovies(query) : await getPopularMovies();
-    return NextResponse.json({ movies: movies.slice(0, 8) });
+    return NextResponse.json({ movies: movies.slice(0, 8) }); // 8 results
   } catch (error) {
     console.error("Failed to search movies:", error);
     return NextResponse.json(

@@ -45,6 +45,14 @@
     font-weight: 500;
   }
 
+  main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 3.5rem;
+    padding-block: 2.5rem;
+  }
+
   h1 {
     font-size: 3rem; /* 48px */
     font-weight: 900;

@@ -12,7 +12,6 @@ import Header from "@/components/layout/Header";
 import HeroBanner from "@/components/movie/HeroBanner";
 import MediaRow from "@/components/movie/MediaRow";
 import GenreRow from "@/components/genre/GenreRow";
-import Footer from "@/components/layout/Footer";
 
 import { getMovieById } from "@/lib/movies";
 import { getSeriesById } from "@/lib/series";
@@ -50,13 +49,13 @@ export default async function Home() {
   );
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--color-bg-main)] text-[var(--color-black)] selection:bg-[var(--color-brand-blue)] selection:text-[var(--color-white)]">
+    <div className="flex flex-1 flex-col bg-[var(--color-bg-main)] text-[var(--color-black)] selection:bg-[var(--color-brand-blue)] selection:text-[var(--color-white)]">
       <div className="relative">
         <Header variant="dark" />
         <HeroBanner movies={heroMoviesWithTrailers} />
       </div>
 
-      <main className="container-grid flex flex-1 flex-col gap-14 pt-14 pb-24">
+      <main className="container-grid">
         <MediaRow title="Top Rated" media={movies} href="/movies/top-rated" />
 
         <GenreRow />
@@ -71,8 +70,6 @@ export default async function Home() {
           href="/collections/midnight-cinema"
         />
       </main>
-
-      <Footer />
     </div>
   );
 }

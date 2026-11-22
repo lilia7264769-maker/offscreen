@@ -10,7 +10,7 @@ const linkTextClassName =
 
 export default function Footer() {
   return (
-    <footer className="relative flex flex-col overflow-hidden bg-[var(--color-brand-blue)] text-[var(--color-white)]">
+    <footer className="relative flex flex-col overflow-hidden bg-[var(--color-brand-blue)] mt-14 text-[var(--color-white)]">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute bottom-[-80px] left-1/2 -translate-x-1/2 opacity-[0.05] [&_svg]:h-auto [&_svg]:w-[300px] md:bottom-[-170px] md:opacity-[0.08] md:[&_svg]:w-[800px]"

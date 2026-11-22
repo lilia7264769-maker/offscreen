@@ -1,5 +1,8 @@
+"use client";
+
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import type { Media } from "@/types/movie";
 import ClapperboardIcon from "@/components/icons/ClapperboardIcon";
 
@@ -62,10 +65,10 @@ export default function MediaCard({ media }: MediaCardProps) {
     }
   }
 
-  return (
+  const card = (
     <div
       onMouseEnter={loadExtraInfo}
-      className="group flex w-full max-w-[196px] shrink-0 cursor-pointer flex-col gap-2"
+      className="group flex w-[196px] shrink-0 cursor-pointer flex-col gap-2"
     >
       <div className="relative aspect-[2/3] w-full rounded-[var(--radius-card)] overflow-hidden bg-bg-grey">
         {media.posterPath ? (
@@ -113,5 +116,18 @@ export default function MediaCard({ media }: MediaCardProps) {
         )}
       </div>
     </div>
+  );
+
+  return media.type === "movie" ? (
+    <Link
+      href={`/movie/${media.id}`}
+      aria-label={`View details for ${media.title}`}
+      draggable={false}
+      className="w-[196px] shrink-0"
+    >
+      {card}
+    </Link>
+  ) : (
+    card
   );
 }

@@ -1,5 +1,5 @@
 import { tmdbFetch, TMDBError } from "./client";
-import type { Movie } from "@/types/movie";
+import type { Movie, MoviePageDetails } from "@/types/movie";
 
 const TMDB_IMAGE = "https://image.tmdb.org/t/p";
 
@@ -19,6 +19,17 @@ interface TMDBMovie extends TMDBMovieBase {
 
 interface TMDBMovieById extends TMDBMovieBase {
   genres: TMDBGenre[];
+}
+
+interface TMDBMoviePageDetails extends TMDBMovieById {
+  tagline: string;
+  original_language: string;
+  status: string;
+  budget: number;
+  revenue: number;
+  runtime: number | null;
+  production_companies: { id: number; name: string }[];
+  origin_country: string[];
 }
 
 interface TMDBMovieDetails {
@@ -44,7 +55,7 @@ interface TMDBCompanyMoviesResponse {
 }
 
 interface TMDBResponse<T> {
-  results: T[]; //  массив объектов какого-то типа
+  results: T[];
 }
 
 // создание объекта Movie. не делает запрос к TMDB, просто преобразует уже полученные данные.
@@ -56,9 +67,9 @@ function mapMovie(
   return {
     id: movie.id,
     title: movie.title,
-    type: "movie",
+    type: "movie", // добавляет
     posterPath: movie.poster_path
-      ? `${TMDB_IMAGE}/w500${movie.poster_path}`
+      ? `${TMDB_IMAGE}/w500${movie.poster_path}` // строит полные URL изображений
       : null,
     backdropPath: movie.backdrop_path
       ? `${TMDB_IMAGE}/original${movie.backdrop_path}`
@@ -86,7 +97,7 @@ async function getMovies(path: string): Promise<Movie[]> {
   const movies = moviesData.results.map((movie) => {
     const genres = movie.genre_ids
       .map((id) => genresById.get(id))
-      .filter((name): name is string => Boolean(name));
+      .filter((name): name is string => Boolean(name)); // Type Predicate
 
     return mapMovie(movie, genres);
   });
@@ -129,6 +140,40 @@ export async function getMovieById(movieId: number): Promise<Movie | null> {
     const genres = movie.genres.map((genre) => genre.name);
 
     return mapMovie(movie, genres);
+  } catch (error) {
+    if (error instanceof TMDBError && error.status === 404) {
+      return null;
+    }
+
+    throw error;
+  }
+}
+
+export async function getMoviePageDetails(
+  movieId: number,
+): Promise<MoviePageDetails | null> {
+  try {
+    const movie = await tmdbFetch<TMDBMoviePageDetails>(`/movie/${movieId}`);
+    const languageName = new Intl.DisplayNames(["en"], {
+      type: "language",
+    }).of(movie.original_language);
+
+    return {
+      ...mapMovie(
+        movie,
+        movie.genres.map((genre) => genre.name),
+        formatRuntime(movie.runtime) ?? undefined,
+      ),
+      tagline: movie.tagline,
+      originalLanguage: languageName ?? movie.original_language,
+      status: movie.status,
+      budget: movie.budget,
+      revenue: movie.revenue, // кассовые сборы
+      productionCompanies: movie.production_companies.map(
+        (company) => company.name,
+      ),
+      countryOfOrigin: movie.origin_country,
+    };
   } catch (error) {
     if (error instanceof TMDBError && error.status === 404) {
       return null;

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-type ButtonVariant = "primary" | "outline" | "text";
+type ButtonVariant = "primary" | "outline" | "text" | "modal";
 
 interface ButtonProps {
   children: ReactNode;
@@ -24,6 +24,8 @@ export default function Button({
     outline:
       "border border-[var(--color-black-mid)] text-[var(--color-black)] hover:scale-[1.05]",
     text: "text-[var(--color-black-mid)] normal-case",
+    modal:
+      "py-2 bg-white/12 rounded-4 text-[15px] text-[var(--color-white)]/70 ",
   };
 
   const baseStyles =

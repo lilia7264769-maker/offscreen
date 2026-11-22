@@ -12,7 +12,7 @@ export default function ChevronsRightIcon({
 
   return (
     <svg
-      className={className}
+      className={`transition-transform duration-200 group-hover:translate-x-1 ${className}`}
       width={size}
       height={size}
       viewBox="0 0 20 20"

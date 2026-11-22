@@ -164,7 +164,7 @@ export default function Header({ variant = "light" }: HeaderProps) {
           : {
               backgroundColor: "var(--color-bg-main)",
               color: "var(--color-black)",
-              borderBottom: "0.4px solid rgba(30, 37, 47, 0.2)",
+              borderBottom: "0.4px solid rgba(30, 37, 47, 0.1)",
             }
       }
     >

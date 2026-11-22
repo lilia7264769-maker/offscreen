@@ -19,29 +19,40 @@ export default function MediaRow({ title, media, href }: MediaRowProps) {
     pointerId: number;
     startX: number;
     scrollLeft: number;
+    isDragging: boolean;
   } | null>(null);
+  const suppressClickRef = useRef(false);
   const [isDragging, setIsDragging] = useState(false);
 
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (event.pointerType !== "mouse" || event.button !== 0) return;
 
     const container = event.currentTarget;
+    suppressClickRef.current = false;
     dragRef.current = {
       pointerId: event.pointerId,
       startX: event.clientX,
       scrollLeft: container.scrollLeft,
+      isDragging: false,
     };
-    container.setPointerCapture(event.pointerId);
-    setIsDragging(true);
   };
 
   const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     const drag = dragRef.current;
     if (!drag || drag.pointerId !== event.pointerId) return;
 
+    const deltaX = event.clientX - drag.startX;
+    if (!drag.isDragging) {
+      if (Math.abs(deltaX) < 6) return;
+
+      drag.isDragging = true;
+      suppressClickRef.current = true;
+      event.currentTarget.setPointerCapture(event.pointerId);
+      setIsDragging(true);
+    }
+
     event.preventDefault();
-    event.currentTarget.scrollLeft =
-      drag.scrollLeft - (event.clientX - drag.startX);
+    event.currentTarget.scrollLeft = drag.scrollLeft - deltaX;
   };
 
   const stopDragging = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -51,6 +62,16 @@ export default function MediaRow({ title, media, href }: MediaRowProps) {
     setIsDragging(false);
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+  };
+
+  const suppressDraggedClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!suppressClickRef.current) return;
+
+    suppressClickRef.current = false;
+    if (event.detail > 0) {
+      event.preventDefault();
+      event.stopPropagation();
     }
   };
 
@@ -76,6 +97,7 @@ export default function MediaRow({ title, media, href }: MediaRowProps) {
         onPointerMove={handlePointerMove}
         onPointerUp={stopDragging}
         onPointerCancel={stopDragging}
+        onClickCapture={suppressDraggedClick}
         className={`-ml-4 flex w-[calc(100%+2rem)] min-w-0 gap-3 overflow-x-auto overscroll-x-contain scrollbar-none py-1 pl-4 touch-auto select-none [-webkit-overflow-scrolling:touch] md:ml-0 md:w-full md:pl-0 ${
           isDragging ? "cursor-grabbing" : "cursor-grab"
         }`}

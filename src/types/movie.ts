@@ -18,6 +18,23 @@ export interface Movie extends Media {
   runtime?: string;
 }
 
+export interface MoviePageDetails extends Movie {
+  tagline: string;
+  originalLanguage: string;
+  status: string;
+  budget: number;
+  revenue: number;
+  productionCompanies: string[];
+  countryOfOrigin: string[];
+}
+
+export interface MovieCastMember {
+  id: number;
+  name: string;
+  character: string;
+  profilePath: string | null;
+}
+
 export interface TVSeries extends Media {
   type: "tv";
   country?: string;

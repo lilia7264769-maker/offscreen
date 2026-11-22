@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import TrailerModal from "./TrailerModal";
 import Image from "next/image";
 import Badge from "../ui/Badge";
@@ -92,7 +93,7 @@ export default function HeroBanner({ movies }: HeroBannerProps) {
     <>
       <section
         id="hero-banner"
-        className="relative isolate h-[500px] touch-pan-y overflow-hidden md:h-[600px]"
+        className="mb-4 relative isolate h-[500px] touch-pan-y overflow-hidden md:h-[600px]"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         onTouchCancel={() => {
@@ -136,7 +137,8 @@ export default function HeroBanner({ movies }: HeroBannerProps) {
         />
 
         {/* Hero content */}
-        <div className="absolute inset-0 z-10 flex items-end">
+        {/* pointer-events-none -- этот слой не перехватывает клики  а то что внутри да pointer-events-auto ... */}
+        <div className="pointer-events-none absolute inset-0 z-10 flex items-end">
           <div className="container-grid flex w-full flex-col items-center gap-6 pb-6 md:gap-14 md:pb-8">
             <div className="flex w-full flex-col items-start gap-5 md:flex-row md:items-end md:justify-between md:gap-10">
               {/* Left side */}
@@ -145,8 +147,14 @@ export default function HeroBanner({ movies }: HeroBannerProps) {
                   new this month
                 </Badge>
 
-                <h1 className="break-words text-[36px] font-black leading-tight drop-shadow-sm md:text-5xl">
-                  {movie.title}
+                <h1 className="pointer-events-auto break-words text-[36px] font-black leading-tight drop-shadow-sm md:text-5xl">
+                  <Link
+                    href={`/movie/${movie.id}`}
+                    draggable={false}
+                    className="transition-opacity hover:opacity-80"
+                  >
+                    {movie.title}
+                  </Link>
                 </h1>
 
                 {movie.overview && (
@@ -179,7 +187,7 @@ export default function HeroBanner({ movies }: HeroBannerProps) {
               </div>
 
               {/* Right side */}
-              <div className="flex w-full shrink-0 flex-row items-center justify-end md:w-auto md:flex-col md:items-end md:gap-[260px]">
+              <div className="pointer-events-auto flex w-full shrink-0 flex-row items-center justify-end md:w-auto md:flex-col md:items-end md:gap-[260px]">
                 <div className="hidden items-center gap-4 md:flex">
                   <button
                     type="button"
@@ -208,14 +216,14 @@ export default function HeroBanner({ movies }: HeroBannerProps) {
                     }}
                   >
                     Watch Trailer
-                    <ChevronsRightIcon className="transition-transform duration-200 group-hover:translate-x-1" />
+                    <ChevronsRightIcon />
                   </Button>
                 </div>
               </div>
             </div>
 
             {/* Индикаторы по центру под основным содержимым */}
-            <div className="flex items-center justify-center gap-3 md:gap-4">
+            <div className="pointer-events-auto flex items-center justify-center gap-3 md:gap-4">
               {slides.map((slide, index) => {
                 const isActive = index === activeIndex;
                 return (
@@ -241,6 +249,7 @@ export default function HeroBanner({ movies }: HeroBannerProps) {
         key={movie.id}
         trailerKeys={movie.trailerKeys}
         isOpen={isTrailerOpen}
+        movieId={movie.id}
         onClose={() => setIsTrailerOpen(false)}
       />
     </>

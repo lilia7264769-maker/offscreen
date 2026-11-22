@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Movie } from "@/types/movie";
 
 interface SearchResultsProps {
@@ -34,29 +35,31 @@ export default function SearchResults({
       ) : (
         <ul className="flex flex-col gap-2">
           {movies.map((movie) => (
-            <li
-              key={movie.id}
-              className="flex items-center gap-4 px-4 py-2 transition-colors hover:bg-[var(--color-bg-grey)]"
-            >
-              <div className="relative h-16 w-11 shrink-0 overflow-hidden rounded-[var(--radius-badge)] bg-[var(--color-bg-grey)]">
-                {movie.posterPath && (
-                  <Image
-                    src={movie.posterPath}
-                    alt=""
-                    fill
-                    sizes="44px"
-                    className="object-cover"
-                  />
-                )}
-              </div>
-              <div className="min-w-0">
-                <p className="truncate text-[16px] font-semibold text-[var(--color-black)]">
-                  {movie.title}
-                </p>
-                <p className="mt-1 text-[13px] font-semibold text-[#797979]">
-                  {movie.releaseYear || "Release date unavailable"}
-                </p>
-              </div>
+            <li key={movie.id}>
+              <Link
+                href={`/movie/${movie.id}`}
+                className="flex items-center gap-4 px-4 py-2 transition-colors hover:bg-[var(--color-bg-grey)]"
+              >
+                <div className="relative h-16 w-11 shrink-0 overflow-hidden rounded-[var(--radius-badge)] bg-[var(--color-bg-grey)]">
+                  {movie.posterPath && (
+                    <Image
+                      src={movie.posterPath}
+                      alt=""
+                      fill
+                      sizes="44px"
+                      className="object-cover"
+                    />
+                  )}
+                </div>
+                <div className="min-w-0">
+                  <p className="truncate text-[16px] font-semibold text-[var(--color-black)]">
+                    {movie.title}
+                  </p>
+                  <p className="mt-1 text-[13px] font-semibold text-[#797979]">
+                    {movie.releaseYear || "Release date unavailable"}
+                  </p>
+                </div>
+              </Link>
             </li>
           ))}
         </ul>

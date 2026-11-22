@@ -1,4 +1,5 @@
 import { Geist, Inter } from "next/font/google";
+import Footer from "@/components/layout/Footer";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -18,7 +19,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${inter.variable}`}>
-      <body className="bg-bg-main text-black antialiased">{children}</body>
+      <body className="flex min-h-screen flex-col bg-bg-main text-black antialiased">
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }
