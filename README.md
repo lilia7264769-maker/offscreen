@@ -1,8 +1,8 @@
-# Offscreen — Movie Discovery Platform
+# Offscreen — Movie & TV Discovery Platform
 
-A personal pet project built with Next.js, React, and TypeScript.
+A personal full-stack pet project built with Next.js, React, and TypeScript.
 
-Offscreen is a movie and TV series discovery platform that allows users to explore titles, browse collections, view details, watch trailers, and manage their favorites.
+Offscreen is a movie and TV series discovery platform where users can explore titles, browse curated collections, search for content, watch trailers, and manage personalized favorites.
 
 ## Live Demo
 
@@ -15,23 +15,24 @@ Offscreen is a movie and TV series discovery platform that allows users to explo
 - Search for movies and TV shows
 - View detailed information about titles
 - Watch available trailers
-- Save favorite titles
+- User authentication with email/password and Google OAuth
+- Personalized favorites for authenticated users
+- Guest favorites with localStorage synchronization after login
 - Responsive user interface
 
 ## Tech Stack
 
-- Next.js
-- React
-- TypeScript
-- Tailwind CSS
-- TMDB API
+- **Frontend:** Next.js, React, TypeScript, Tailwind CSS
+- **Authentication:** Better Auth
+- **Database:** PostgreSQL (Neon)
+- **External API:** TMDB API
 
 ## Getting Started
 
 Clone the repository:
 
 ```bash
-git clone YOUR_GITHUB_REPOSITORY_URL
+git clone https://github.com/lilia7264769-maker/offscreen.git
 ```
 
 Install dependencies:
@@ -40,13 +41,15 @@ Install dependencies:
 npm install
 ```
 
+Configure the required environment variables in a `.env.local` file.
+
 Run the development server:
 
 ```bash
 npm run dev
 ```
 
-Open http://localhost:3000 in your browser.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Project Status
 
