@@ -3,6 +3,8 @@
 @theme {
   --color-brand-blue: #044eb7;
   --color-brand-blue-hover: rgb(4 78 183 / 85%);
+  --color-brand-blue-low: rgb(4 78 183 / 12%);
+  --color-brand-blue-low6: rgb(4 78 183 / 6%);
 
   --color-white: #fefefe;
   --color-white-low16: rgba(254, 254, 254, 0.16);
@@ -12,10 +14,24 @@
   --color-black: #1e252f;
   --color-black-mid: rgba(30, 37, 47, 0.7);
   --color-black-low: rgba(30, 37, 47, 0.4);
+  --color-black-low10: rgba(30, 37, 47, 0.1);
+  --color-black-low16: rgba(30, 37, 47, 0.16);
+  --color-black-low20: rgba(30, 37, 47, 0.2);
 
   --color-bg-main: #f8f8f8;
   --color-bg-grey: #f4f6f5;
+  --color-bg-about: #f7f8fa;
   --color-border-grey: #dcdcdc;
+
+  --color-genre-hover: #bc4f90;
+  --color-badge-gradient-start: #d417c1;
+  --color-badge-gradient-end: #b75804;
+
+  --color-dark-bg: #181818;
+  --color-dark-raised: #242424;
+  --color-dark-card: #20232b;
+  --color-dark-muted: #858b99;
+  --color-dark-text: #b5bac5;
 
   --stroke-width-thin: 0.4px;
   --stroke-width-medium: 0.8px;

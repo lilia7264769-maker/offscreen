@@ -31,7 +31,8 @@ export default function Badge({
       style={
         variant === "gradient"
           ? {
-              backgroundImage: "linear-gradient(to right, #D417C1, #B75804)",
+              backgroundImage:
+                "linear-gradient(to right, var(--color-badge-gradient-start), var(--color-badge-gradient-end))",
             }
           : undefined
       }

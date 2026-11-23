@@ -37,7 +37,33 @@ export async function getMovieCredits(movieId: number): Promise<MovieCredits> {
   return {
     cast: credits.cast
       .sort((first, second) => first.order - second.order)
-      .slice(0, 12)
+      .map((person) => ({
+        id: person.id,
+        name: person.name,
+        character: person.character,
+        profilePath: person.profile_path
+          ? `${TMDB_IMAGE}/w185${person.profile_path}`
+          : null,
+      })),
+    directors: credits.crew
+      .filter((person) => person.job === "Director")
+      .map((person) => person.name),
+    writers: credits.crew
+      .filter((person) =>
+        ["Writer", "Screenplay", "Story"].includes(person.job),
+      )
+      .map((person) => person.name),
+  };
+}
+
+export async function getSeriesCredits(seriesId: number): Promise<MovieCredits> {
+  const credits = await tmdbFetch<TMDBCreditsResponse>(
+    `/tv/${seriesId}/credits`,
+  );
+
+  return {
+    cast: credits.cast
+      .sort((first, second) => first.order - second.order)
       .map((person) => ({
         id: person.id,
         name: person.name,

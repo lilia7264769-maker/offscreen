@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { rememberSearch } from "@/lib/storage";
 import type { Movie } from "@/types/movie";
 
 interface SearchResultsProps {
@@ -21,14 +22,14 @@ export default function SearchResults({
 
   return (
     <div className="min-w-0">
-      <h2 className="px-4 pb-2 text-[13px] font-semibold text-[#797979]">
+      <h2 className="px-4 pb-2 text-[13px] font-semibold text-[var(--color-black-mid)]">
         {query ? "Search results" : "Popular movies"}
       </h2>
 
       {message ? (
         <p
           role={error && !isLoading ? "alert" : undefined}
-          className="flex min-h-40 items-center justify-center px-4 py-5 text-center text-sm text-[var(--color-black-mid)]"
+          className="px-4 py-5 text-left text-sm text-[var(--color-black-mid)]"
         >
           {message}
         </p>
@@ -38,6 +39,19 @@ export default function SearchResults({
             <li key={movie.id}>
               <Link
                 href={`/movie/${movie.id}`}
+                onClick={() => {
+                  if (!query.trim()) return;
+
+                  rememberSearch({
+                    id: movie.id,
+                    type: movie.type,
+                    title: movie.title,
+                    posterPath: movie.posterPath,
+                    releaseYear: movie.releaseYear,
+                    genres: movie.genres,
+                    rating: movie.rating,
+                  });
+                }}
                 className="flex items-center gap-4 px-4 py-2 transition-colors hover:bg-[var(--color-bg-grey)]"
               >
                 <div className="relative h-16 w-11 shrink-0 overflow-hidden rounded-[var(--radius-badge)] bg-[var(--color-bg-grey)]">
@@ -55,7 +69,7 @@ export default function SearchResults({
                   <p className="truncate text-[16px] font-semibold text-[var(--color-black)]">
                     {movie.title}
                   </p>
-                  <p className="mt-1 text-[13px] font-semibold text-[#797979]">
+                  <p className="mt-1 text-[13px] font-semibold text-[var(--color-black-mid)]">
                     {movie.releaseYear || "Release date unavailable"}
                   </p>
                 </div>

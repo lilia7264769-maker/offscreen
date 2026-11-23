@@ -10,6 +10,7 @@ export interface Media {
   genres: string[];
   rating: number;
   overview: string;
+  popularity?: number;
 }
 
 export interface Movie extends Media {

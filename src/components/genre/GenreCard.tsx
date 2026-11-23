@@ -13,7 +13,7 @@ export default function GenreCard({ title, image, href }: GenreCardProps) {
       href={href}
       draggable={false}
       onDragStart={(event) => event.preventDefault()}
-      className="group flex h-[112px] w-[128px] shrink-0 flex-col items-center gap-0 rounded-[var(--radius-card)] bg-white px-2 pt-1 pb-2 shadow-genre-card transition-colors duration-200 hover:bg-[#BC4F90] focus-visible:bg-[#BC4F90] sm:h-[160px] sm:w-[200px] sm:gap-2 sm:px-4 sm:py-4"
+      className="group flex h-[112px] w-[128px] shrink-0 flex-col items-center gap-0 rounded-[var(--radius-card)] bg-[var(--color-white)] px-2 pt-1 pb-2 shadow-genre-card transition-colors duration-200 hover:bg-[var(--color-genre-hover)] focus-visible:bg-[var(--color-genre-hover)] sm:h-[160px] sm:w-[200px] sm:gap-2 sm:px-4 sm:py-4"
     >
       <div className="relative h-[72px] w-full sm:h-[128px]">
         <Image
@@ -26,7 +26,7 @@ export default function GenreCard({ title, image, href }: GenreCardProps) {
         />
       </div>
 
-      <span className="text-center text-[16px] leading-6 font-bold text-[var(--color-brand-blue)] transition-colors duration-200 group-hover:text-white group-focus-visible:text-white sm:text-[20px] sm:leading-7">
+      <span className="text-center text-[16px] leading-6 font-bold text-[var(--color-brand-blue)] transition-colors duration-200 group-hover:text-[var(--color-white)] group-focus-visible:text-[var(--color-white)] sm:text-[20px] sm:leading-7">
         {title}
       </span>
     </Link>

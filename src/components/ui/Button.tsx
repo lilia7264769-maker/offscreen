@@ -25,7 +25,7 @@ export default function Button({
       "border border-[var(--color-black-mid)] text-[var(--color-black)] hover:scale-[1.05]",
     text: "text-[var(--color-black-mid)] normal-case",
     modal:
-      "py-2 bg-white/12 rounded-4 text-[15px] text-[var(--color-white)]/70 ",
+      "py-2 bg-[var(--color-white)]/12 rounded-4 text-[15px] text-[var(--color-white)]/70 ",
   };
 
   const baseStyles =

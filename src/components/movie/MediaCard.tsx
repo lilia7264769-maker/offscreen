@@ -81,14 +81,14 @@ export default function MediaCard({ media }: MediaCardProps) {
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 bg-[#20232B] px-3">
-            <ClapperboardIcon size={32} className="text-[#858B99]" />
-            <p className="line-clamp-3 text-center text-sm font-medium text-[#B5BAC5]">
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 bg-[var(--color-dark-card)] px-3">
+            <ClapperboardIcon size={32} className="text-[var(--color-dark-muted)]" />
+            <p className="line-clamp-3 text-center text-sm font-medium text-[var(--color-dark-text)]">
               {media.title}
             </p>
           </div>
         )}
-        <div className="absolute inset-0 bg-[#044eb7]/70 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100">
+        <div className="absolute inset-0 bg-[var(--color-brand-blue)]/70 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100">
           <div className="absolute inset-x-0 bottom-0 flex flex-col gap-0.5 px-3 py-4 text-[var(--color-white)]">
             {extraInfo && (
               <p className="text-[13px] font-normal opacity-70">{extraInfo}</p>
@@ -105,7 +105,7 @@ export default function MediaCard({ media }: MediaCardProps) {
           {/* оставляем одну цифру после десятичной точки */}
         </div>
       </div>
-      <div className="flex items-center gap-1 text-[13px] font-semibold text-[#797979]">
+      <div className="flex items-center gap-1 text-[13px] font-semibold text-[var(--color-black-mid)]">
         <span>{media.releaseYear}</span>
 
         {media.genres?.length > 0 && (
@@ -118,16 +118,14 @@ export default function MediaCard({ media }: MediaCardProps) {
     </div>
   );
 
-  return media.type === "movie" ? (
+  return (
     <Link
-      href={`/movie/${media.id}`}
+      href={media.type === "movie" ? `/movie/${media.id}` : `/series/${media.id}`}
       aria-label={`View details for ${media.title}`}
       draggable={false}
       className="w-[196px] shrink-0"
     >
       {card}
     </Link>
-  ) : (
-    card
   );
 }

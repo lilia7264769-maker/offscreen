@@ -22,7 +22,7 @@ export default function NotFound() {
             {rippleClasses.map((rippleClass) => (
               <span
                 key={rippleClass}
-                className={`absolute left-1/2 top-1/2 aspect-square -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full border border-[rgba(30,37,47,0.4)] opacity-30 [animation-duration:7s] [animation-timing-function:ease-out] motion-reduce:animate-none motion-reduce:opacity-30 ${rippleClass}`}
+                className={`absolute left-1/2 top-1/2 aspect-square -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full border border-[var(--color-black-low)] opacity-30 [animation-duration:7s] [animation-timing-function:ease-out] motion-reduce:animate-none motion-reduce:opacity-30 ${rippleClass}`}
               />
             ))}
           </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Button from "../ui/Button";
+import Button from "@/components/ui/Button";
 import ChevronsRightIcon from "@/components/icons/ChevronsRightIcon";
 import XmarkIcon from "@/components/icons/XmarkIcon";
 import ClapperboardIcon from "@/components/icons/ClapperboardIcon";
@@ -169,7 +169,7 @@ export default function TrailerModal({
         role="dialog"
         aria-modal="true"
         aria-label="Movie trailers"
-        className="w-full max-w-5xl rounded-[var(--radius-card)] bg-[#181818] py-3"
+        className="w-full max-w-5xl rounded-[var(--radius-card)] bg-[var(--color-dark-bg)] py-3"
         // Prevent clicks inside the modal from bubbling up to the backdrop and closing it
         onClick={(event) => event.stopPropagation()} // Иначе клик внутри модального окна тоже дошёл бы до внешнего div, который закрыл бы окно.
       >
@@ -201,7 +201,7 @@ export default function TrailerModal({
                 >
                   Trailer {index + 1}
                   {activeTrailerIndex === index && (
-                    <span className="absolute top-6 left-0 h-[2px] w-full bg-white" />
+                    <span className="absolute top-6 left-0 h-[2px] w-full bg-[var(--color-white)]" />
                   )}
                 </button>
               ))}
@@ -246,10 +246,10 @@ export default function TrailerModal({
         ) : (
           <div
             role="status"
-            className="flex aspect-video w-full flex-col items-center justify-center gap-6 rounded-[var(--radius-card)] bg-[#242424]"
+            className="flex aspect-video w-full flex-col items-center justify-center gap-6 rounded-[var(--radius-card)] bg-[var(--color-dark-raised)]"
           >
-            <ClapperboardIcon size={48} className="text-[#858B99]" />
-            <p className="text-center text-[15px] text-[#B5BAC5]">
+            <ClapperboardIcon size={48} className="text-[var(--color-dark-muted)]" />
+            <p className="text-center text-[15px] text-[var(--color-dark-text)]">
               {hasError
                 ? "Unable to load the trailer. Please try again later."
                 : "No trailers available for this movie."}

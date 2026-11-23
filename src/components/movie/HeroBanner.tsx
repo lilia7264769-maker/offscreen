@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import TrailerModal from "./TrailerModal";
+import TrailerModal from "@/components/movie/trailers/TrailerModal";
 import Image from "next/image";
 import Badge from "../ui/Badge";
 import Button from "../ui/Button";
@@ -142,7 +142,7 @@ export default function HeroBanner({ movies }: HeroBannerProps) {
           <div className="container-grid flex w-full flex-col items-center gap-6 pb-6 md:gap-14 md:pb-8">
             <div className="flex w-full flex-col items-start gap-5 md:flex-row md:items-end md:justify-between md:gap-10">
               {/* Left side */}
-              <div className="flex w-full flex-col items-start gap-4 text-white md:max-w-[500px] md:gap-6">
+              <div className="flex w-full flex-col items-start gap-4 text-[var(--color-white)] md:max-w-[500px] md:gap-6">
                 <Badge variant="gradient" compactMobile>
                   new this month
                 </Badge>
@@ -158,7 +158,7 @@ export default function HeroBanner({ movies }: HeroBannerProps) {
                 </h1>
 
                 {movie.overview && (
-                  <p className="hidden text-[14px] font-light text-white/80 line-clamp-3 leading-relaxed drop-shadow-sm md:block">
+                  <p className="hidden text-[14px] font-light text-[var(--color-white)]/80 line-clamp-3 leading-relaxed drop-shadow-sm md:block">
                     {movie.overview}
                   </p>
                 )}
@@ -193,7 +193,7 @@ export default function HeroBanner({ movies }: HeroBannerProps) {
                     type="button"
                     aria-label="Previous banner"
                     onClick={showPrevious}
-                    className="group flex items-center justify-center rounded-full text-white"
+                    className="group flex items-center justify-center rounded-full text-[var(--color-white)]"
                   >
                     <SwitchIcon className="-scale-x-100" />
                   </button>
@@ -202,7 +202,7 @@ export default function HeroBanner({ movies }: HeroBannerProps) {
                     type="button"
                     aria-label="Next banner"
                     onClick={showNext}
-                    className="group flex items-center justify-center rounded-full text-white"
+                    className="group flex items-center justify-center rounded-full text-[var(--color-white)]"
                   >
                     <SwitchIcon />
                   </button>
@@ -233,7 +233,7 @@ export default function HeroBanner({ movies }: HeroBannerProps) {
                     aria-label={`Show banner ${index + 1}: ${slide.title}`}
                     aria-current={isActive ? "true" : undefined}
                     onClick={() => setActiveIndex(index)}
-                    className={`hero-indicator rounded-full bg-white transition-all duration-300 ${
+                    className={`hero-indicator rounded-full bg-[var(--color-white)] transition-all duration-300 ${
                       isActive
                         ? "w-10 opacity-100 md:w-24 "
                         : "w-5 opacity-50 md:w-12"

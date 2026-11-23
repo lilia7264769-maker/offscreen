@@ -11,6 +11,7 @@ interface TMDBMovieBase {
   release_date: string;
   vote_average: number;
   overview: string;
+  popularity: number;
 }
 
 interface TMDBMovie extends TMDBMovieBase {
@@ -80,6 +81,7 @@ function mapMovie(
     genres,
     rating: movie.vote_average,
     overview: movie.overview,
+    popularity: movie.popularity,
     runtime,
   };
 }
@@ -222,7 +224,7 @@ export function getPopularMoviesAroundToday(): Promise<Movie[]> {
   );
 }
 
-async function getCompanyID(name: string): Promise<number | null> {
+export async function getCompanyID(name: string): Promise<number | null> {
   const data = await tmdbFetch<TMDBResponse<TMDBCompany>>(
     `/search/company?query=${encodeURIComponent(name)}`,
   );

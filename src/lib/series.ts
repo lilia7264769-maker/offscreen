@@ -11,6 +11,7 @@ interface TMDBSeriesBase {
   first_air_date: string | null;
   vote_average: number;
   overview: string;
+  popularity: number;
 }
 
 interface TMDBSeries extends TMDBSeriesBase {
@@ -59,6 +60,7 @@ function mapSeries(
     genres,
     rating: show.vote_average,
     overview: show.overview,
+    popularity: show.popularity,
     numberOfSeasons, // необязательное
   };
 }
@@ -129,4 +131,78 @@ export function getPopularSeries(): Promise<TVSeries[]> {
 
 export function searchSeries(query: string): Promise<TVSeries[]> {
   return getSeries(`/search/tv?query=${encodeURIComponent(query)}`);
+}
+
+export function getSimilarSeries(seriesId: number): Promise<TVSeries[]> {
+  return getSeries(`/tv/${seriesId}/similar`);
+}
+
+interface TMDBSeriesPage extends TMDBSeriesById {
+  tagline: string | null;
+  original_language: string;
+  status: string;
+  number_of_seasons: number | null;
+  episode_run_time?: number[];
+  created_by?: { name: string }[];
+  networks?: { name: string }[];
+  production_companies?: { name: string }[];
+  origin_country?: string[];
+}
+
+export interface SeriesPageDetails extends TVSeries {
+  tagline: string;
+  originalLanguage: string;
+  status: string;
+  seasonsLabel: string;
+  episodeRuntime?: string;
+  creators: string[];
+  networks: string[];
+  productionCompanies: string[];
+  countryOfOrigin: string[];
+}
+
+function formatEpisodeRuntime(minutes: number | undefined): string | undefined {
+  if (!minutes) return undefined;
+  return `${minutes}min`;
+}
+
+function formatSeasons(count: number | null): string {
+  if (!count) return "";
+  return count === 1 ? "Season 1" : `${count} seasons`;
+}
+
+export async function getSeriesPageDetails(
+  seriesId: number,
+): Promise<SeriesPageDetails | null> {
+  try {
+    const show = await tmdbFetch<TMDBSeriesPage>(`/tv/${seriesId}`);
+    const languageName = new Intl.DisplayNames(["en"], {
+      type: "language",
+    }).of(show.original_language);
+
+    return {
+      ...mapSeries(
+        show,
+        show.genres.map((genre) => genre.name),
+        formatSeasons(show.number_of_seasons),
+      ),
+      tagline: show.tagline ?? "",
+      originalLanguage: languageName ?? show.original_language,
+      status: show.status,
+      seasonsLabel: formatSeasons(show.number_of_seasons),
+      episodeRuntime: formatEpisodeRuntime(show.episode_run_time?.[0]),
+      creators: (show.created_by ?? []).map((person) => person.name),
+      networks: (show.networks ?? []).map((network) => network.name),
+      productionCompanies: (show.production_companies ?? []).map(
+        (company) => company.name,
+      ),
+      countryOfOrigin: show.origin_country ?? [],
+    };
+  } catch (error) {
+    if (error instanceof TMDBError && error.status === 404) {
+      return null;
+    }
+
+    throw error;
+  }
 }

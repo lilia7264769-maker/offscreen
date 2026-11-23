@@ -16,6 +16,14 @@ export default function HorizontalMediaRow({
   trackClassName = "",
 }: HorizontalMediaRowProps) {
   const trackRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<{
+    pointerId: number;
+    startX: number;
+    scrollLeft: number;
+    isDragging: boolean;
+  } | null>(null);
+  const suppressClickRef = useRef(false);
+  const [isDragging, setIsDragging] = useState(false);
   const [canScroll, setCanScroll] = useState(false);
   const [canScrollBack, setCanScrollBack] = useState(false);
   const [canScrollForward, setCanScrollForward] = useState(false);
@@ -54,6 +62,57 @@ export default function HorizontalMediaRow({
     });
   }
 
+  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType !== "mouse" || event.button !== 0) return;
+
+    const container = event.currentTarget;
+    suppressClickRef.current = false;
+    dragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      scrollLeft: container.scrollLeft,
+      isDragging: false,
+    };
+  };
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+
+    const deltaX = event.clientX - drag.startX;
+    if (!drag.isDragging) {
+      if (Math.abs(deltaX) < 6) return;
+
+      drag.isDragging = true;
+      suppressClickRef.current = true;
+      event.currentTarget.setPointerCapture(event.pointerId);
+      setIsDragging(true);
+    }
+
+    event.preventDefault();
+    event.currentTarget.scrollLeft = drag.scrollLeft - deltaX;
+  };
+
+  const stopDragging = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (dragRef.current?.pointerId !== event.pointerId) return;
+
+    dragRef.current = null;
+    setIsDragging(false);
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+  };
+
+  const suppressDraggedClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!suppressClickRef.current) return;
+
+    suppressClickRef.current = false;
+    if (event.detail > 0) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  };
+
   return (
     <section className="w-full min-w-0">
       <div className="mb-4 flex min-h-8 items-center justify-between md:mb-5">
@@ -86,7 +145,14 @@ export default function HorizontalMediaRow({
       <div
         ref={trackRef}
         onScroll={updateScrollState}
-        className={`flex w-full min-w-0 gap-3 overflow-x-auto overscroll-x-contain pb-2 scrollbar-none touch-pan-x [-webkit-overflow-scrolling:touch] ${trackClassName}`}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={stopDragging}
+        onPointerCancel={stopDragging}
+        onClickCapture={suppressDraggedClick}
+        className={`-ml-4 flex w-[calc(100%+2rem)] min-w-0 gap-3 overflow-x-auto overscroll-x-contain pb-2 pl-4 scrollbar-none select-none touch-pan-x [-webkit-overflow-scrolling:touch] md:ml-0 md:w-full md:pl-0 ${
+          isDragging ? "cursor-grabbing" : "cursor-grab"
+        } ${trackClassName}`}
       >
         {children}
       </div>

@@ -5,10 +5,10 @@ import MediaCard from "@/components/movie/MediaCard";
 import MovieDetailActions from "@/components/movie/MovieDetailActions";
 import HorizontalMediaRow from "@/components/movie/HorizontalMediaRow";
 import MovieAbout from "@/components/movie/MovieAbout";
-import MovieTrailerRow from "@/components/movie/MovieTrailerRow";
+import MovieTrailers from "@/components/movie/trailers/MovieTrailers";
 import { getMovieCredits } from "@/lib/credits";
 import { getMoviePageDetails, getSimilarMovies } from "@/lib/movies";
-import { getMovieTrailers } from "@/lib/videos";
+import { getMovieTrailerCards } from "@/lib/videos";
 
 interface MoviePageProps {
   params: Promise<{ id: string }>;
@@ -32,11 +32,11 @@ export default async function MoviePage({ params }: MoviePageProps) {
     notFound();
   }
 
-  const [movie, credits, similarMovies, trailerKeys] = await Promise.all([
+  const [movie, credits, similarMovies, trailers] = await Promise.all([
     getMoviePageDetails(movieId),
     getMovieCredits(movieId),
     getSimilarMovies(movieId),
-    getMovieTrailers(movieId),
+    getMovieTrailerCards(movieId),
   ]);
 
   if (!movie) notFound();
@@ -77,7 +77,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
       <Header />
 
       <main className="container-grid">
-        <section className="grid gap-8 md:grid-cols-[minmax(140px,220px)_minmax(0,1fr)] md:gap-6 xl:grid-cols-[220px_minmax(0,1fr)_360px] xl:gap-8">
+        <section className="relative z-10 grid gap-8 md:grid-cols-[minmax(140px,220px)_minmax(0,1fr)] md:gap-6 xl:grid-cols-[220px_minmax(0,1fr)_360px] xl:gap-8">
           <div className="mx-auto w-full max-w-[220px] md:mx-0">
             <div className="relative aspect-[2/3] overflow-hidden rounded-[var(--radius-card)] bg-[var(--color-bg-grey)]">
               {movie.posterPath && (
@@ -104,7 +104,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
               {movie.runtime ? ` · ${movie.runtime}` : ""}
               {movie.status ? ` · ${movie.status}` : ""}
             </p>
-            <h1 className="mb-4 text-3xl leading-tight font-extrabold md:text-2xl xl:text-4xl">
+            <h1 className="mb-4 text-3xl leading-tight font-extrabold xl:text-4xl">
               {movie.title}
             </h1>
 
@@ -113,7 +113,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
                 {movie.genres.map((genre) => (
                   <li
                     key={genre}
-                    className="rounded-full border border-[var(--color-brand-blue)] px-3 py-1 text-xs text-[var(--color-brand-blue)]"
+                    className="rounded-full border border-[var(--color-brand-blue)] px-3 py-1 text-[15px] font-medium lowercase text-[var(--color-brand-blue)]"
                   >
                     {genre}
                   </li>
@@ -125,7 +125,19 @@ export default async function MoviePage({ params }: MoviePageProps) {
               {movie.overview || "No synopsis is available for this film yet."}
             </p>
 
-            <MovieDetailActions movieId={movie.id} trailerKeys={trailerKeys} />
+            <MovieDetailActions
+              movieId={movie.id}
+              movieTitle={movie.title}
+              favorite={{
+                id: movie.id,
+                type: movie.type,
+                title: movie.title,
+                posterPath: movie.posterPath,
+                releaseYear: movie.releaseYear,
+                genres: movie.genres,
+                rating: movie.rating,
+              }}
+            />
 
             <div className="mt-8 w-full md:hidden">
               <MovieAbout idSuffix="mobile" facts={facts} alwaysExpanded />
@@ -133,7 +145,11 @@ export default async function MoviePage({ params }: MoviePageProps) {
           </div>
 
           <aside className="hidden xl:block">
-            <MovieDetailActions movieId={movie.id} trailerKeys={[]} compact />
+            <MovieDetailActions
+              movieId={movie.id}
+              movieTitle={movie.title}
+              compact
+            />
             <div className="mt-4">
               <MovieAbout idSuffix="desktop" facts={facts} />
             </div>
@@ -141,24 +157,28 @@ export default async function MoviePage({ params }: MoviePageProps) {
         </section>
 
         <section className="hidden flex-col gap-6 md:flex xl:hidden">
-          <MovieDetailActions movieId={movie.id} trailerKeys={[]} compact />
-          <MovieAbout idSuffix="tablet" facts={facts} alwaysExpanded />
-        </section>
-
-        {trailerKeys.length > 0 && (
-          <MovieTrailerRow
+          <MovieDetailActions
             movieId={movie.id}
             movieTitle={movie.title}
-            trailerKeys={trailerKeys}
+            compact
+          />
+          <MovieAbout idSuffix="tablet" facts={facts} alwaysExpanded columns />
+        </section>
+
+        {trailers.length > 0 && (
+          <MovieTrailers
+            movieId={movie.id}
+            movieTitle={movie.title}
+            trailers={trailers}
           />
         )}
 
         {credits.cast.length > 0 && (
           <HorizontalMediaRow title="Cast">
-            {credits.cast.slice(0, 12).map((person) => (
+            {credits.cast.map((person) => (
               <article
-                key={person.id}
-                className="w-[calc((100vw-64px)/3)] shrink-0 sm:w-[calc((100vw-112px)/5)] md:w-[calc((100vw-160px)/7)] xl:w-[calc((100vw-240px)/7)]"
+                key={`${person.id}-${person.character}`}
+                className="w-[120px] shrink-0"
               >
                 <div className="relative aspect-[3/4] overflow-hidden rounded-[var(--radius-card)] bg-[var(--color-bg-grey)]">
                   {person.profilePath ? (
@@ -166,7 +186,8 @@ export default async function MoviePage({ params }: MoviePageProps) {
                       src={person.profilePath}
                       alt={person.name}
                       fill
-                      sizes="(max-width: 767px) 33vw, (max-width: 1279px) 13vw, 12vw"
+                      draggable={false}
+                      sizes="196px"
                       className="object-cover"
                     />
                   ) : (
@@ -175,10 +196,10 @@ export default async function MoviePage({ params }: MoviePageProps) {
                     </div>
                   )}
                 </div>
-                <p className="mt-2 truncate text-xs font-semibold">
+                <p className="mt-2 truncate text-[15px] font-semibold">
                   {person.name}
                 </p>
-                <p className="mt-1 truncate text-xs text-[var(--color-black-mid)]">
+                <p className="mt-1 truncate text-[13px] font-semibold text-[var(--color-black-mid)]">
                   {person.character}
                 </p>
               </article>
