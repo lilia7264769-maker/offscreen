@@ -17,7 +17,7 @@ const TABS = [
   { id: "animation", label: "Animation" },
 ] as const;
 
-type CatalogTab = (typeof TABS)[number]["id"];
+export type CatalogTab = (typeof TABS)[number]["id"];
 
 const SORT_OPTIONS: Choice[] = [
   { value: "rating", label: "Rating" },
@@ -31,6 +31,8 @@ interface CatalogBrowseProps {
   years: Choice[];
   countries: Choice[];
   animationGenreId: string;
+  initialTab?: CatalogTab;
+  initialGenre?: string;
   initial: {
     results: Media[];
     page: number;
@@ -44,13 +46,15 @@ export default function CatalogBrowse({
   years,
   countries,
   animationGenreId,
+  initialTab = "all",
+  initialGenre = "",
   initial,
 }: CatalogBrowseProps) {
   const [openMenu, setOpenMenu] = useState<
     "genre" | "year" | "country" | "sort" | null
   >(null);
-  const [tab, setTab] = useState<CatalogTab>("all");
-  const [genre, setGenre] = useState("");
+  const [tab, setTab] = useState<CatalogTab>(initialTab);
+  const [genre, setGenre] = useState(initialGenre);
   const [year, setYear] = useState("");
   const [country, setCountry] = useState("");
   const [sort, setSort] = useState<SortKey>("popularity");

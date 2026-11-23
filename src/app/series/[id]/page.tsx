@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import Header from "@/components/layout/Header";
 import MediaCard from "@/components/movie/MediaCard";
@@ -97,14 +98,16 @@ export default async function SeriesPage({ params }: SeriesPageProps) {
               {series.title}
             </h1>
 
-            {series.genres.length > 0 && (
+            {series.genreLinks.length > 0 && (
               <ul className="mb-5 flex flex-wrap gap-2">
-                {series.genres.map((genre) => (
-                  <li
-                    key={genre}
-                    className="rounded-full border border-[var(--color-brand-blue)] px-3 py-1 text-[15px] font-medium lowercase text-[var(--color-brand-blue)]"
-                  >
-                    {genre}
+                {series.genreLinks.map((genre) => (
+                  <li key={genre.id}>
+                    <Link
+                      href={`/catalog?tab=series&genre=${genre.id}`}
+                      className="inline-flex rounded-full border border-[var(--color-brand-blue)] px-3 py-1 text-[15px] font-medium lowercase text-[var(--color-brand-blue)]"
+                    >
+                      {genre.name}
+                    </Link>
                   </li>
                 ))}
               </ul>

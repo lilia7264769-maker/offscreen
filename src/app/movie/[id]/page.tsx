@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import Header from "@/components/layout/Header";
 import MediaCard from "@/components/movie/MediaCard";
@@ -108,14 +109,16 @@ export default async function MoviePage({ params }: MoviePageProps) {
               {movie.title}
             </h1>
 
-            {movie.genres.length > 0 && (
+            {movie.genreLinks.length > 0 && (
               <ul className="mb-5 flex flex-wrap gap-2">
-                {movie.genres.map((genre) => (
-                  <li
-                    key={genre}
-                    className="rounded-full border border-[var(--color-brand-blue)] px-3 py-1 text-[15px] font-medium lowercase text-[var(--color-brand-blue)]"
-                  >
-                    {genre}
+                {movie.genreLinks.map((genre) => (
+                  <li key={genre.id}>
+                    <Link
+                      href={`/catalog?tab=movies&genre=${genre.id}`}
+                      className="inline-flex rounded-full border border-[var(--color-brand-blue)] px-3 py-1 text-[15px] font-medium lowercase text-[var(--color-brand-blue)]"
+                    >
+                      {genre.name}
+                    </Link>
                   </li>
                 ))}
               </ul>

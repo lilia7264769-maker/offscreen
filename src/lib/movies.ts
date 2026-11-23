@@ -175,6 +175,10 @@ export async function getMoviePageDetails(
         (company) => company.name,
       ),
       countryOfOrigin: movie.origin_country,
+      genreLinks: movie.genres.map((genre) => ({
+        id: genre.id,
+        name: genre.name,
+      })),
     };
   } catch (error) {
     if (error instanceof TMDBError && error.status === 404) {

@@ -1,0 +1,25 @@
+interface EyeIconProps {
+  className?: string;
+}
+
+export default function EyeIcon({ className = "" }: EyeIconProps) {
+  return (
+    <svg
+      className={className}
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M9.99792 16.6666C15.1963 16.6666 17.5762 12.0572 18.2306 10.5039C18.3678 10.1783 18.3678 9.82155 18.2306 9.4959C17.5762 7.9426 15.1963 3.33325 9.99792 3.33325C4.7986 3.33325 2.42158 7.9442 1.76859 9.4967C1.63182 9.82187 1.63182 10.178 1.76859 10.5031C2.42158 12.0556 4.7986 16.6666 9.99792 16.6666ZM13.3333 9.99992C13.3333 11.8409 11.8409 13.3333 9.99998 13.3333C8.15904 13.3333 6.66665 11.8409 6.66665 9.99992C6.66665 8.15897 8.15904 6.66659 9.99998 6.66659C11.8409 6.66659 13.3333 8.15897 13.3333 9.99992Z"
+        style={{ strokeWidth: "var(--icon-stroke-default)" }}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        stroke="currentColor"
+      />
+    </svg>
+  );
+}

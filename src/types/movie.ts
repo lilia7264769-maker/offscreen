@@ -27,6 +27,7 @@ export interface MoviePageDetails extends Movie {
   revenue: number;
   productionCompanies: string[];
   countryOfOrigin: string[];
+  genreLinks: { id: number; name: string }[];
 }
 
 export interface MovieCastMember {

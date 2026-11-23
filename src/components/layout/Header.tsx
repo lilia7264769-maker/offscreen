@@ -7,6 +7,7 @@ import SearchIcon from "@/components/icons/SearchIcon";
 import XmarkIcon from "@/components/icons/XmarkIcon";
 import MenuIcon from "@/components/icons/MenuIcon";
 import HeartIcon from "@/components/icons/HeartIcon";
+import HeaderAccount from "@/components/layout/HeaderAccount";
 import SearchResultsPanel from "./SearchResultsPanel";
 import SearchResults from "./SearchResults";
 import type { Movie } from "@/types/movie";
@@ -263,6 +264,10 @@ export default function Header({ variant = "light" }: HeaderProps) {
                   <HeartIcon />
                 </span>
               </Link>
+            </li>
+
+            <li className="flex items-center">
+              <HeaderAccount />
             </li>
           </ul>
         </nav>

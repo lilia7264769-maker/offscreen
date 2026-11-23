@@ -159,6 +159,7 @@ export interface SeriesPageDetails extends TVSeries {
   networks: string[];
   productionCompanies: string[];
   countryOfOrigin: string[];
+  genreLinks: { id: number; name: string }[];
 }
 
 function formatEpisodeRuntime(minutes: number | undefined): string | undefined {
@@ -197,6 +198,10 @@ export async function getSeriesPageDetails(
         (company) => company.name,
       ),
       countryOfOrigin: show.origin_country ?? [],
+      genreLinks: show.genres.map((genre) => ({
+        id: genre.id,
+        name: genre.name,
+      })),
     };
   } catch (error) {
     if (error instanceof TMDBError && error.status === 404) {

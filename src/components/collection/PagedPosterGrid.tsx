@@ -15,7 +15,7 @@ interface PagedPosterGridProps {
   loading: boolean;
   error?: string | null;
   resetKey: string;
-  onLoad: () => void;
+  onLoad?: () => void;
   emptyLabel?: string;
 }
 
@@ -64,7 +64,7 @@ export default function PagedPosterGrid({
   const needsMoreData = ready && items.length < limit && hasMore && !error;
 
   useEffect(() => {
-    if (!needsMoreData || loading) return;
+    if (!needsMoreData || loading || !onLoad) return;
     onLoad();
   }, [loading, needsMoreData, onLoad]);
 

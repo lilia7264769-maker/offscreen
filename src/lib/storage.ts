@@ -5,7 +5,7 @@ export const SEARCHES_KEY = "offscreen.recent-searches";
 export const STORAGE_EVENT = "offscreen-storage";
 
 const SEARCH_LIMIT = 12;
-const FAVORITE_LIMIT = 200;
+export const FAVORITE_LIMIT = 200;
 
 export interface SavedTitle {
   id: number;
@@ -17,7 +17,8 @@ export interface SavedTitle {
   rating: number;
 }
 
-function isSavedTitle(value: unknown): value is SavedTitle {
+// Type Guard
+export function isSavedTitle(value: unknown): value is SavedTitle {
   if (!value || typeof value !== "object") return false;
 
   const item = value as SavedTitle;
@@ -71,6 +72,7 @@ export function hasFavorite(type: ContentType, id: number): boolean {
   return readFavorites().some((item) => sameTitle(item, type, id));
 }
 
+// если фильм уже в избранном — удаляет его
 export function toggleFavorite(item: SavedTitle): boolean {
   const current = readFavorites();
   const exists = current.some((saved) => sameTitle(saved, item.type, item.id));
@@ -82,10 +84,17 @@ export function toggleFavorite(item: SavedTitle): boolean {
   return !exists;
 }
 
+export function clearFavorites() {
+  writeList(FAVORITES_KEY, []);
+}
+
+// Добавляет фильм в историю поиска: сначала удаляет его старый дубликат
 export function rememberSearch(item: SavedTitle) {
   const next = [
     item,
-    ...readRecentSearches().filter((saved) => !sameTitle(saved, item.type, item.id)),
+    ...readRecentSearches().filter(
+      (saved) => !sameTitle(saved, item.type, item.id),
+    ),
   ].slice(0, SEARCH_LIMIT);
 
   writeList(SEARCHES_KEY, next);

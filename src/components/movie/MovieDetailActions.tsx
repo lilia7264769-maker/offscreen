@@ -5,6 +5,12 @@ import ChevronsRightIcon from "@/components/icons/ChevronsRightIcon";
 import HeartIcon from "@/components/icons/HeartIcon";
 import WhereToWatchModal from "@/components/movie/WhereToWatchModal";
 import Button from "@/components/ui/Button";
+import { authClient } from "@/lib/auth-client";
+import {
+  ACCOUNT_FAVORITES_EVENT,
+  fetchFavoriteSaved,
+  setAccountFavorite,
+} from "@/lib/favorites-client";
 import {
   STORAGE_EVENT,
   hasFavorite,
@@ -30,24 +36,42 @@ export default function MovieDetailActions({
   const [rating, setRating] = useState<number | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isWhereToWatchOpen, setIsWhereToWatchOpen] = useState(false);
+  const { data: session, isPending } = authClient.useSession();
+  const userId = session?.user.id ?? null;
 
   useEffect(() => {
-    if (!favorite) return;
+    if (!favorite || isPending) return;
 
     const saved = favorite;
 
-    function sync() {
-      setIsFavorite(hasFavorite(saved.type, saved.id));
+    if (!userId) {
+      function syncGuest() {
+        setIsFavorite(hasFavorite(saved.type, saved.id));
+      }
+
+      syncGuest();
+      window.addEventListener(STORAGE_EVENT, syncGuest);
+      window.addEventListener("storage", syncGuest);
+      return () => {
+        window.removeEventListener(STORAGE_EVENT, syncGuest);
+        window.removeEventListener("storage", syncGuest);
+      };
     }
 
-    sync();
-    window.addEventListener(STORAGE_EVENT, sync);
-    window.addEventListener("storage", sync);
+    let cancelled = false;
+
+    async function syncAccount() {
+      const savedNow = await fetchFavoriteSaved(saved.type, saved.id);
+      if (!cancelled) setIsFavorite(savedNow);
+    }
+
+    void syncAccount();
+    window.addEventListener(ACCOUNT_FAVORITES_EVENT, syncAccount);
     return () => {
-      window.removeEventListener(STORAGE_EVENT, sync);
-      window.removeEventListener("storage", sync);
+      cancelled = true;
+      window.removeEventListener(ACCOUNT_FAVORITES_EVENT, syncAccount);
     };
-  }, [favorite]);
+  }, [favorite, isPending, userId]);
 
   if (compact) {
     return (
@@ -73,12 +97,18 @@ export default function MovieDetailActions({
             isFavorite ? "Remove from favorites" : "Add to favorites"
           }
           onClick={() => {
-            if (!favorite) {
-              setIsFavorite((current) => !current);
+            if (!favorite || isPending) return;
+
+            if (!session) {
+              setIsFavorite(toggleFavorite(favorite));
               return;
             }
 
-            setIsFavorite(toggleFavorite(favorite));
+            const next = !isFavorite;
+            setIsFavorite(next);
+            void setAccountFavorite(favorite, next).then((ok) => {
+              if (!ok) setIsFavorite(!next);
+            });
           }}
           className={`group flex size-11 items-center justify-center rounded-full border border-[var(--color-border-grey)] transition-colors hover:text-[var(--color-brand-blue)] ${
             isFavorite
